@@ -1,0 +1,11 @@
+.cache
+.vs
+.vscode
+.idea
+
+build/
+managed_components/
+__cmake*
+sdkconfig.old
+compile_commands.json
+

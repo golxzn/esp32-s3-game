@@ -1,0 +1,4 @@
+Communication Method,Time in microseconds (60 attempts),Attempt time in microseconds,
+GPIO.out_w1t[cs],3880629,64677,
+GPIO.out_w1t[cs] with pins cache,3457949,57632,
+Dedicated GPIO,2727906,45465,
