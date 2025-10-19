@@ -30,7 +30,7 @@ fun stuff like SIMD on this chip!
 * Double-Buffered Rendering using TFT 3'5 ili9486 through [Dedicated GPIO][dedic-gpio] (I'm planning to migrate to Octal-SPI to reach 60 FPS);
 * [SPIFF][spiff] file system;
 * Multiple simultaneous [WAV file][wav-file] support using [LEDC][ledc] and [PWM][pwm].
-* [DualSense®][dualsense] controller support over [HID over USB][hid-over-usb] (I did BT Classic, but then realize that esp32-s3 doesn't support it 😭);
+* [DualSense®][dualsense] controller support though [HID over USB][hid-over-usb] (I did BT Classic, but then realize that esp32-s3 doesn't support it 😭);
 
 
 <!-- LINKS -->
