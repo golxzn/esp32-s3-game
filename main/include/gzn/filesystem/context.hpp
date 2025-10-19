@@ -8,7 +8,7 @@
 namespace gzn::fs {
 
 constexpr size_t max_mounted_portations{ 8 };
-using portations_array = std::array<std::string_view, max_mounted_portations>;
+using partitions_array = std::array<std::string_view, max_mounted_portations>;
 
 struct context {
 	static constexpr auto npos{ (std::numeric_limits<size_t>::max)() };
@@ -17,14 +17,14 @@ struct context {
 		uint8_t cleanup_attempts {  3 };
 	};
 
-	portations_array         mounted_portations{};
+	partitions_array         mounted_partitions{};
 	garbage_collector_config gc_config{};
 	uint8_t                  gc_counter{};
 
 	[[gnu::always_inline]]
 	inline auto get_available_mount_id() -> size_t {
-		for (size_t i{}; i < std::size(mounted_portations); ++i) {
-			if (std::empty(mounted_portations[i])) {
+		for (size_t i{}; i < std::size(mounted_partitions); ++i) {
+			if (std::empty(mounted_partitions[i])) {
 				return i;
 			}
 		}
@@ -33,7 +33,7 @@ struct context {
 
 	[[gnu::always_inline]]
 	inline auto find_portation(const std::string_view portation) const -> bool {
-		for (const auto &name : mounted_portations) {
+		for (const auto &name : mounted_partitions) {
 			if (name == portation) {
 				return true;
 			}

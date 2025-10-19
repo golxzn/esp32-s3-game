@@ -21,7 +21,7 @@
 #include "gzn/graphics/render.hpp"
 #include "gzn/filesystem/manager.hpp"
 
-static constexpr const char *TAG{ "test-proj" };
+static constexpr auto TAG{ "test-proj" };
 
 static void render_loop(void *);
 static void update_loop();
@@ -42,7 +42,7 @@ static auto initialization() -> bool {
 
 	const auto mount_result{ fs::manager::mount({
 		.base_path                    { "/assets" },
-		.portation_label              { "assets" },
+		.partition_label              { "assets" },
 		.max_simultanious_opened_files{ 16 },
 		.format_if_mount_failed       { false }
 	}) };
@@ -106,6 +106,7 @@ extern "C" void app_main(void) {
 
 void render_loop(void *user) {
 	using namespace gzn;
+	using namespace graphics;
 
 	/// Display initializes Dedicated GPIO, so it should be created at the same
 	/// core as gzn::graphics::defaults::render_thread_core_id. That's tricky
@@ -114,15 +115,15 @@ void render_loop(void *user) {
 	display.configure(tft::make_initialization_sequence());
 	display.set_orientation(tft::display::orientation::inverted_landscape);
 
-	if (graphics::render::initialize(display) != graphics::init_status::success) {
+	if (render::initialize(display) != init_status::success) {
 		ESP_LOGE(TAG, "Failed to initialize render");
 		return;
 	}
 
 	xTaskNotifyGive(static_cast<TaskHandle_t>(user));
 
-	while (graphics::render::is_ready()) {
-		graphics::render::update();
+	while (render::is_ready()) {
+		render::update();
 	}
 }
 

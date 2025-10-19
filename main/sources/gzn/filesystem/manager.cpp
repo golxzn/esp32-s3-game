@@ -30,10 +30,10 @@ auto manager::initialize(const setup_info &info) -> bool {
 void manager::destroy() {
 	if (!ctx) { return; }
 
-	for (auto &portation : ctx->mounted_portations) {
-		if (!std::empty(portation)) {
-			esp_vfs_spiffs_unregister(std::data(portation));
-			portation = std::string_view{};
+	for (auto &partition : ctx->mounted_partitions) {
+		if (!std::empty(partition)) {
+			esp_vfs_spiffs_unregister(std::data(partition));
+			partition = std::string_view{};
 		}
 	}
 };
@@ -48,7 +48,7 @@ void manager::update() {
 }
 
 auto manager::mount(const mount_info &info) -> mount_error {
-	if (std::empty(info.base_path) || std::empty(info.portation_label)) {
+	if (std::empty(info.base_path) || std::empty(info.partition_label)) {
 		return mount_error::invalid_argument;
 	}
 
@@ -57,13 +57,13 @@ auto manager::mount(const mount_info &info) -> mount_error {
 		return mount_error::max_mounted_portations_reached;
 	}
 
-	if (is_mounted(info.portation_label) || is_mounted(info.base_path)) {
+	if (is_mounted(info.partition_label) || is_mounted(info.base_path)) {
 		return mount_error::already_mounted;
 	}
 
 	const esp_vfs_spiffs_conf_t config{
 		.base_path              = std::data(info.base_path),
-		.partition_label        = std::data(info.portation_label),
+		.partition_label        = std::data(info.partition_label),
 		.max_files              = info.max_simultanious_opened_files,
 		.format_if_mount_failed = info.format_if_mount_failed
 	};
@@ -75,7 +75,7 @@ auto manager::mount(const mount_info &info) -> mount_error {
 		default: break;
 	}
 
-	ctx->mounted_portations[mount_id] = info.portation_label;
+	ctx->mounted_partitions[mount_id] = info.partition_label;
 
 	return mount_error::ok;
 }
@@ -206,13 +206,13 @@ auto manager::read_file_loop(
 
 void manager::collect_garbage() {
 	ESP_LOGI(TAG, "Collecting garbage");
-	for (const auto portation : ctx->mounted_portations) {
-		if (std::empty(portation)) {
+	for (const auto partition : ctx->mounted_partitions) {
+		if (std::empty(partition)) {
 			continue;
 		}
 
 		for (size_t attemts{ ctx->gc_config.cleanup_attempts }; attemts != 0; --attemts) {
-			if (ESP_ERR_NOT_FINISHED != esp_spiffs_gc(std::data(portation), 1024 * 1024)) {
+			if (ESP_ERR_NOT_FINISHED != esp_spiffs_gc(std::data(partition), 1024 * 1024)) {
 				break;
 			}
 		}

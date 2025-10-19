@@ -13,7 +13,7 @@ using file_id = uint32_t;
 
 struct mount_info {
 	std::string_view base_path{};
-	std::string_view portation_label{};
+	std::string_view partition_label{};
 	size_t           max_simultanious_opened_files{};
 	bool             format_if_mount_failed{ false };
 };
